@@ -60,15 +60,16 @@ class BaseRepository
         if ($request->get('all') && $request->get('all') === 'true') {
             return $this->all();
         }
-        return $this->withPagination($request);
+        return $this->withPagination($request, []);
     }
 
     /**
      * @param Request $request
+     * @param array|null $relations
      * @return ListDTO
      * @throws ApiArgumentException
      */
-    protected function withPagination(Request $request): ListDTO
+    protected function withPagination(Request $request, ?array $relations): ListDTO
     {
         $currentPage = $request->get('currentPage', 1);
         $perPage = $request->get('perPage', 10);
@@ -85,7 +86,11 @@ class BaseRepository
             return $currentPage;
         });
 
-        $value = $this->model::orderBy('id', $orderBy)->paginate($perPage);
+        if (isset($relations)) {
+            $value = $this->model::orderBy('id', $orderBy)->with($relations)->paginate($perPage);
+        } else {
+            $value = $this->model::orderBy('id', $orderBy)->paginate($perPage);
+        }
 
         return new ListDTO(
             $value->currentPage(),

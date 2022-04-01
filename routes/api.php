@@ -25,8 +25,10 @@ use App\Http\Controllers\Api\Import\ImportGetController;
 use App\Http\Controllers\Api\Message\AllMessagesClearController;
 use App\Http\Controllers\Api\Message\MessageClearController;
 use App\Http\Controllers\Api\Message\MessageGetController;
+use App\Http\Controllers\Api\Queue\QueueBookAddController;
+use App\Http\Controllers\Api\Queue\QueueChangeOrderController;
 use App\Http\Controllers\Api\Queue\QueueGetController;
-use App\Http\Controllers\Api\Queue\QueueRemoveBookController;
+use App\Http\Controllers\Api\Queue\QueueClearAllController;
 use App\Http\Controllers\Api\Series\SeriesGetController;
 use App\Http\Controllers\Api\Series\SeriesListController;
 use App\Http\Controllers\Api\Series\SeriesRemoveController;
@@ -46,7 +48,7 @@ Route::prefix('/auth')->group(function () {
     Route::post('/login',       [LoginController::class, '__invoke'])->name('auth.login');
     Route::post('/register',    [RegistrationController::class, '__invoke'])->name('auth.register');
 });
-
+// !!!! Проверить чтобы все было в одном формате, а то /get/{id} и /{id}/detail - выбивается из одного формата
 //Route::middleware('auth:api')->group(function () {
 Route::namespace('api')->group(function () {
 
@@ -124,8 +126,11 @@ Route::namespace('api')->group(function () {
 
     // Queue
     Route::prefix('/queue')->group(function () {
-        Route::get('/get',     [QueueGetController::class, '__invoke'])->name('queue.get');
-        Route::post('/remove', [QueueRemoveBookController::class, '__invoke'])->name('queue.remove');
+        Route::get('/get',      [QueueGetController::class, '__invoke'])->name('queue.get');
+        Route::post('/remove',  [QueueClearAllController::class, '__invoke'])->name('queue.remove');
+        Route::post('/add',     [QueueBookAddController::class, '__invoke'])->name('queue.add');
+        Route::post('/order',   [QueueChangeOrderController::class, '__invoke'])->name('queue.order');
+        Route::post('/clear',   [QueueClearAllController::class, '__invoke'])->name('queue.clear');
     });
 });
 

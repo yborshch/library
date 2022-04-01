@@ -61,6 +61,11 @@ class Book
     /**
      * @var string
      */
+    public string $source_link = '';
+
+    /**
+     * @var string
+     */
     public string $title;
 
     /**

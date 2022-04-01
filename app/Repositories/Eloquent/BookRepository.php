@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 
 use App\DTO\ListDTO;
 use App\Exceptions\ApiArgumentException;
+use App\Models\Author;
 use App\Models\Book;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\ValueObject\Book as ValueBook;
@@ -43,6 +44,7 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
                 $seriesModel = (new SeriesRepository())->getOrCreate($value['series']);
                 $book['series_id'] = $seriesModel->id;
             }
+
             $book['current_page'] = 0;
             $book['description'] = $value['description'];
             $book['pages'] = $value['pages'];
@@ -57,12 +59,10 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
             $id = $savedBook->id;
 
             // Authors
-            $arrayAuthorModels = (new AuthorRepository())->getOrCreate(
-                $this->preparationAuthors($value['author'])
-            );
+            $arrayAuthorModels = $this->preparationAuthors($value['author']);
 
             foreach ($arrayAuthorModels as $arrayAuthorModel) {
-                $savedBook->authors()->attach($arrayAuthorModel->id);
+                $savedBook->authors()->attach($arrayAuthorModel['id']);
             }
 
             if (isset($value['file'])) {
@@ -102,36 +102,20 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
         return (new FileRepository())->store($forStore);
     }
 
-    public function preparationAuthors(array $values): stdClass
+    public function preparationAuthors(array $values): array
     {
-        $authors = new stdClass();
+        $authors = [];
 
-        // Поля в свойстве field должны содержать имена ключей массивов из свойства values
         foreach ($values as $value) {
-            $explode = explode(' ', $value);
-            switch (count($explode)) {
-                case 2:
-                    // Пример: Людмила Мартова
-                    $authors->values[] = [
-                        'firstname' => $explode[0],
-                        'lastname' => $explode[1],
-                    ];
-                    break;
-                case 3:
-                    // Пример: Галина Владимировна Романова
-                    $authors->values[] = [
-                        'firstname' => $explode[0],
-                        'lastname' => $explode[2],
-                    ];
-                    break;
-                default:
-                    // Пример: Анна и Сергей Литвиновы
-                    $lastname = end($explode);
-                    $firstname = implode(' ', array_slice($explode, 0, -1));
-                    $authors->values[] = [
-                        'firstname' => $firstname,
-                        'lastname' => $lastname,
-                    ];
+            if ($value['new']) {
+                $authors[] = Author::firstOrCreate(
+                    ['firstname' => $value['firstname']],
+                    ['lastname' => $value['lastname']],
+                )->toArray();
+            } else {
+                $authors[] = Author::where('id', '=', $value['id'])
+                    ->first()
+                    ->toArray();
             }
         }
 
@@ -163,9 +147,7 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
             return $this->all();
         }
 
-        $value = $this->model::with('queue')->get();
-
-        return $this->withPagination($request, $value);
+        return $this->withPagination($request, ['authors', 'image', 'queue']);
     }
 
     /**
@@ -175,7 +157,7 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
      */
     public function getBookDetail(int $bookId): Collection
     {
-        $item = $this->model::with('authors', 'category', 'image', 'series')->where('id', $bookId)->get();
+        $item = $this->model::with('authors', 'category', 'image', 'series', 'queue')->where('id', $bookId)->get();
 
         if (!$item->count()) {
             throw new ApiArgumentException(

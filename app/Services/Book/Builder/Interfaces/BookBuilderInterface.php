@@ -49,6 +49,12 @@ interface BookBuilderInterface
     public function setSource(int $src): BookBuilderInterface;
 
     /**
+     * @param string $sourceLink
+     * @return BookBuilderInterface
+     */
+    public function setSourceLink(string $sourceLink): BookBuilderInterface;
+
+    /**
      * @return Book
      */
     public function getBook(): Book;

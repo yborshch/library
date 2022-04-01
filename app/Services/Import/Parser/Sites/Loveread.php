@@ -119,6 +119,9 @@ class Loveread implements ParserInterface
         // Set source
         $builder->setSource(Book::BOOK_IMPORT);
 
+        // Set source link
+        $builder->setSourceLink($this->urlToBookInformation);
+
         // Get book
         $book = $builder->getBook();
 

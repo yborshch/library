@@ -93,6 +93,17 @@ class BookBuilder implements BookBuilderInterface
         return $this;
     }
 
+    /**
+     * @param string $sourceLink
+     * @return BookBuilderInterface
+     */
+    public function setSourceLink(string $sourceLink): BookBuilderInterface
+    {
+        $this->book->source_link = $sourceLink;
+
+        return $this;
+    }
+
     public function setSeries(string $series): BookBuilderInterface
     {
         $this->book->series = $series;

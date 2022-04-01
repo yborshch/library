@@ -18,8 +18,8 @@ class BookListResource extends JsonResource
     public function toArray($request): ListDTO
     {
         foreach ($this->resource->list as $book) {
-            $book->queue = (bool)count($book->queue()->get());
-            $book->new = Carbon::parse($book->created_at)->isToday();
+            $book->queueLabel = $book->queue && $book->queue->count() > 0;
+            $book->newLabel = Carbon::parse($book->created_at)->isToday();
         }
 
         return $this->resource;

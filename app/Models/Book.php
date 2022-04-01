@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Notifications\Notifiable;
 
@@ -52,7 +53,8 @@ class Book extends AdminModel
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this
+            ->belongsTo(Category::class);
     }
 
     /**
@@ -60,7 +62,9 @@ class Book extends AdminModel
      */
     public function authors(): BelongsToMany
     {
-        return $this->belongsToMany(Author::class, 'author_book')->withTimestamps();
+        return $this
+            ->belongsToMany(Author::class, 'author_book')
+            ->withTimestamps();
     }
 
     /**
@@ -68,7 +72,8 @@ class Book extends AdminModel
      */
     public function series(): BelongsTo
     {
-        return $this->belongsTo(Series::class);
+        return $this
+            ->belongsTo(Series::class);
     }
 
     /**
@@ -76,7 +81,9 @@ class Book extends AdminModel
      */
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'book_tag')->withTimestamps();
+        return $this
+            ->belongsToMany(Tag::class, 'book_tag')
+            ->withTimestamps();
     }
 
     /**
@@ -84,7 +91,8 @@ class Book extends AdminModel
      */
     public function queue(): HasOne
     {
-        return $this->hasOne(Queue::class);
+        return $this
+            ->hasOne(Queue::class);
     }
 
     /**
@@ -92,6 +100,18 @@ class Book extends AdminModel
      */
     public function image(): HasOne
     {
-        return $this->hasOne(File::class)->where('image', true);
+        return $this
+            ->hasOne(File::class)
+            ->where('image', true);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function files(): HasMany
+    {
+        return $this
+            ->hasMany(File::class, 'book_id', 'id')
+            ->where('image', true);
     }
 }

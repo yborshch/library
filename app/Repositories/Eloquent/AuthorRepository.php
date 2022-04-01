@@ -58,17 +58,4 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
             $value->items(),
         );
     }
-
-    /**
-     * @param stdClass $preparatedAuthors
-     * @return array|string
-     */
-    public function getOrCreate(stdClass $preparatedAuthors): array
-    {
-        $result = [];
-        foreach ($preparatedAuthors->values as $value) {
-            $result[] = $this->model::firstOrCreate($value);
-        }
-        return $result;
-    }
 }
