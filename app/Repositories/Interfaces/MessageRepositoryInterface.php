@@ -18,4 +18,9 @@ interface MessageRepositoryInterface extends BaseRepositoryInterface
      * @return bool
      */
     public function destroy(Message $message): bool;
+
+    /**
+     * @return bool
+     */
+    public function readAllMessages(): bool;
 }

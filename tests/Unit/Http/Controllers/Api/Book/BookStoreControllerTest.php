@@ -22,7 +22,7 @@ class BookStoreControllerTest extends TestCase
     /**
      * @var Author
      */
-    public Author $author1;
+    protected Author $author1;
 
     /**
      * @var Author
@@ -42,7 +42,7 @@ class BookStoreControllerTest extends TestCase
     /**
      * @var Book
      */
-    protected Book $book;
+    protected $book;
 
     protected function setUp():void
     {

@@ -29,6 +29,9 @@ class ImportGetController extends Controller
      */
     public function __invoke(): JsonResponse
     {
-        return response()->json($this->bookRepository->getImportedBooks(), 201);
+        return response()->json(
+            $this->bookRepository->getImportedBooks(),
+            201
+        );
     }
 }

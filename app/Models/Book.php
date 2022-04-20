@@ -31,7 +31,7 @@ class Book extends AdminModel
         'description',
         'images',
         'pages',
-        'readed',
+        'read',
         'source',
         'source_link',
         'title',
@@ -45,7 +45,7 @@ class Book extends AdminModel
      * @var array
      */
     protected $casts = [
-        'readed' => 'boolean',
+        'read' => 'boolean',
     ];
 
     /**
@@ -63,7 +63,7 @@ class Book extends AdminModel
     public function authors(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Author::class, 'author_book')
+            ->belongsToMany(Author::class, 'author_book', 'book_id', 'author_id')
             ->withTimestamps();
     }
 
@@ -98,6 +98,14 @@ class Book extends AdminModel
     /**
      * @return HasOne
      */
+    public function messages(): HasOne
+    {
+        return $this->hasOne(Message::class);
+    }
+
+    /**
+     * @return HasOne
+     */
     public function image(): HasOne
     {
         return $this
@@ -111,7 +119,6 @@ class Book extends AdminModel
     public function files(): HasMany
     {
         return $this
-            ->hasMany(File::class, 'book_id', 'id')
-            ->where('image', true);
+            ->hasMany(File::class, 'book_id', 'id');
     }
 }

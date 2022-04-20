@@ -1,17 +1,13 @@
 <?php
 
-
 namespace App\Http\Controllers\Api\Category;
-
 
 use App\DTO\ResponseDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ListRequest;
-use App\Http\Resources\IsHasBooksResource;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-class CategoryListController extends Controller
+class BookListByCategoryController extends Controller
 {
     /**
      * @var CategoryRepositoryInterface
@@ -19,7 +15,6 @@ class CategoryListController extends Controller
     protected CategoryRepositoryInterface $repository;
 
     /**
-     * CategoryListController constructor.
      * @param CategoryRepositoryInterface $repository
      */
     public function __construct(CategoryRepositoryInterface $repository)
@@ -28,17 +23,13 @@ class CategoryListController extends Controller
     }
 
     /**
-     * @param ListRequest $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function __invoke(ListRequest $request): JsonResponse
+    public function __invoke(int $id): JsonResponse
     {
-        $response = new IsHasBooksResource(
-            $this->repository->list($request)
-        );
-
         return response()->json(
-            new ResponseDTO($response)
+            new ResponseDTO($this->repository->listByCategory($id))
         );
     }
 }

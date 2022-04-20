@@ -26,7 +26,7 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
      * @return mixed|void
      */
     public function listByAuthor(int $id) {
-        return $this->model::where('id', $id)->with(['books' => function($query) use ($id) {
+        return $this->model::where('id', $id)->with('books.image', 'books.authors')->with(['books' => function($query) use ($id) {
             $query->where('author_id', $id);
         }])->first();
     }
@@ -57,5 +57,18 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
             '',
             $value->items(),
         );
+    }
+
+    /**
+     * @param stdClass $prepareAuthors
+     * @return array
+     */
+    public function getOrCreate(stdClass $prepareAuthors): array
+    {
+        $result = [];
+        foreach ($prepareAuthors->values as $value) {
+            $result[] = $this->model::firstOrCreate($value);
+        }
+        return $result;
     }
 }

@@ -12,9 +12,11 @@ use App\Http\Controllers\Api\Author\BookListByAuthorController;
 use App\Http\Controllers\Api\Book\BookDetailGetController;
 use App\Http\Controllers\Api\Book\BookListController;
 use App\Http\Controllers\Api\Book\BookRemoveController;
+use App\Http\Controllers\Api\Book\BookSearchController;
 use App\Http\Controllers\Api\Book\BookStoreController;
 use App\Http\Controllers\Api\Book\BookUpdateController;
 use App\Http\Controllers\Api\Browser\BrowserIsExistController;
+use App\Http\Controllers\Api\Category\BookListByCategoryController;
 use App\Http\Controllers\Api\Category\CategoryGetController;
 use App\Http\Controllers\Api\Category\CategoryListController;
 use App\Http\Controllers\Api\Category\CategoryRemoveController;
@@ -25,10 +27,12 @@ use App\Http\Controllers\Api\Import\ImportGetController;
 use App\Http\Controllers\Api\Message\AllMessagesClearController;
 use App\Http\Controllers\Api\Message\MessageClearController;
 use App\Http\Controllers\Api\Message\MessageGetController;
+use App\Http\Controllers\Api\Message\MessageReadController;
 use App\Http\Controllers\Api\Queue\QueueBookAddController;
 use App\Http\Controllers\Api\Queue\QueueChangeOrderController;
 use App\Http\Controllers\Api\Queue\QueueGetController;
 use App\Http\Controllers\Api\Queue\QueueClearAllController;
+use App\Http\Controllers\Api\Queue\QueueRemoveBookController;
 use App\Http\Controllers\Api\Series\SeriesGetController;
 use App\Http\Controllers\Api\Series\SeriesListController;
 use App\Http\Controllers\Api\Series\SeriesRemoveController;
@@ -60,7 +64,7 @@ Route::namespace('api')->group(function () {
         Route::post('/update',  [AuthorUpdateController::class, '__invoke'])->name('author.update');
         Route::post('/remove',  [AuthorRemoveController::class, '__invoke'])->name('author.remove');
         Route::get('/search',   [AuthorSearchController::class, '__invoke'])->name('author.search');
-        Route::get('/books/{id}',  [BookListByAuthorController::class, '__invoke'])->name('author.books');
+        Route::get('/{id}/books',  [BookListByAuthorController::class, '__invoke'])->name('author.books');
     });
 
     // Book
@@ -70,6 +74,7 @@ Route::namespace('api')->group(function () {
         Route::get('/{id}/detail', [BookDetailGetController::class, '__invoke'])->name('book.get');
         Route::post('/update',  [BookUpdateController::class, '__invoke'])->name('book.update');
         Route::post('/remove',  [BookRemoveController::class, '__invoke'])->name('book.remove');
+        Route::get('/search/{searchWord?}',   [BookSearchController::class, '__invoke'])->name('book.search');
     });
 
     // Category
@@ -79,6 +84,7 @@ Route::namespace('api')->group(function () {
         Route::get('/get/{id}', [CategoryGetController::class, '__invoke'])->name('category.get');
         Route::post('/update',  [CategoryUpdateController::class, '__invoke'])->name('category.update');
         Route::post('/remove',  [CategoryRemoveController::class, '__invoke'])->name('category.remove');
+        Route::get('/{id}/books',  [BookListByCategoryController::class, '__invoke'])->name('category.books');
     });
 
     // Tag
@@ -112,6 +118,7 @@ Route::namespace('api')->group(function () {
     Route::prefix('/message')->group(function () {
         Route::get('/get',      [MessageGetController::class, '__invoke'])->name('message.get');
         Route::post('/{id}/clear', [MessageClearController::class, '__invoke'])->name('message.clear');
+        Route::post('/read',    [MessageReadController::class, '__invoke'])->name('message.read');
     });
 
     // Messages
@@ -127,7 +134,7 @@ Route::namespace('api')->group(function () {
     // Queue
     Route::prefix('/queue')->group(function () {
         Route::get('/get',      [QueueGetController::class, '__invoke'])->name('queue.get');
-        Route::post('/remove',  [QueueClearAllController::class, '__invoke'])->name('queue.remove');
+        Route::post('/remove',  [QueueRemoveBookController::class, '__invoke'])->name('queue.remove');
         Route::post('/add',     [QueueBookAddController::class, '__invoke'])->name('queue.add');
         Route::post('/order',   [QueueChangeOrderController::class, '__invoke'])->name('queue.order');
         Route::post('/clear',   [QueueClearAllController::class, '__invoke'])->name('queue.clear');

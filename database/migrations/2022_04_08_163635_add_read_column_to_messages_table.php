@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnToBooksTable extends Migration
+class AddReadColumnToMessagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddColumnToBooksTable extends Migration
      */
     public function up()
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->integer('source')->after('read');
+        Schema::table('messages', function (Blueprint $table) {
+            $table->integer('read')->default(0)->after('action');
         });
     }
 
@@ -25,8 +25,8 @@ class AddColumnToBooksTable extends Migration
      */
     public function down()
     {
-        Schema::table('books', function (Blueprint $table) {
-            //
+        Schema::table('messages', function (Blueprint $table) {
+            $table->dropColumn('read');
         });
     }
 }

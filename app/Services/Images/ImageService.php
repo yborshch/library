@@ -10,7 +10,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Storage;
 use Imagick;
-use stdClass;
 
 class ImageService implements ImageInterface
 {
@@ -85,6 +84,8 @@ class ImageService implements ImageInterface
             }
 
             $imagick->writeImage($path);
+            chmod($path, 0644);
+
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

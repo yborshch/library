@@ -44,7 +44,7 @@ class QueueRepository extends BaseRepository implements QueueRepositoryInterface
                 'order' => $this->model::max('order') + 1,
             ]);
         }
-        throw new Exception('Книга с данным ID не найдена');
+        throw new \Exception('Книга с данным ID не найдена');
     }
 
     /**

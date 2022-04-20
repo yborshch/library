@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api\Message;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\MessageWrapperResource;
 use App\Repositories\Interfaces\MessageRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-class MessageGetController extends Controller
+class MessageReadController extends Controller
 {
     /**
      * @var MessageRepositoryInterface
@@ -27,10 +26,8 @@ class MessageGetController extends Controller
      */
     public function __invoke(): JsonResponse
     {
-        $response = new MessageWrapperResource(
-            $this->messageRepository->getMessages()
-        );
-
-        return response()->json($response);
+        return response()->json([
+            'read' => $this->messageRepository->readAllMessages()
+        ]);
     }
 }

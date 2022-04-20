@@ -40,4 +40,11 @@ class MessageRepository extends BaseRepository implements MessageRepositoryInter
     {
         return $message->delete();
     }
+
+    public function readAllMessages(): bool
+    {
+        return $this->model::where('read', '!=', 1)->update([
+            'read' => 1
+        ]) > 0;
+    }
 }

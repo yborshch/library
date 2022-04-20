@@ -9,14 +9,13 @@ use App\Services\Import\BookServiceInterface;
 use App\Services\Import\FileType\PDF;
 use App\Services\Import\Parser\Sites\Loveread;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Symfony\Component\HttpFoundation\Request;
 
-class ImportFromLovereadInPdfJob implements ShouldQueue, ShouldBeUnique
+class ImportFromLovereadInPdfJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -59,7 +58,11 @@ class ImportFromLovereadInPdfJob implements ShouldQueue, ShouldBeUnique
 
         $book = $this->bookService->createBook($parser);
         $book->type = 'pdf';
-        $saveToFile = $this->bookService->saveTo(new PDF(), $book);
+
+        $saveToFile = $this->bookService->saveTo(
+            new PDF(),
+            $book
+        );
         if ($saveToFile) {
             unset($book->context);
             $savedBook = (new BookRepository())->store((array) $book);

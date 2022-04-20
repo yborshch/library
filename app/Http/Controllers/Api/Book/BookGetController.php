@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api\Book;
 use App\DTO\ResponseDTO;
 use App\Exceptions\ApiArgumentException;
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
-class BookDetailGetController extends Controller
+class BookGetController extends Controller
 {
     /**
      * @var BookRepositoryInterface
@@ -31,7 +32,7 @@ class BookDetailGetController extends Controller
     public function __invoke(int $id): JsonResponse
     {
         return response()->json(
-            new ResponseDTO($this->repository->getBookDetail($id))
+            new ResponseDTO($this->repository->get($id))
         );
     }
 }

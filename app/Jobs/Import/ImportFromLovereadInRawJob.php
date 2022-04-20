@@ -14,7 +14,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Request;
 
 class ImportFromLovereadInRawJob implements ShouldQueue
@@ -65,14 +64,16 @@ class ImportFromLovereadInRawJob implements ShouldQueue
         $book->id = $savedBook->id;
         $book->context = $context;
 
-        $this->bookService->saveTo(
+        $saveToFile = $this->bookService->saveTo(
             new Raw(new ContextRepository()),
             $book
         );
-        (new MessageRepository())->store([
-            'book_id' => $book->id,
-            'book' => $savedBook,
-            'action' => 'Импорт'
-        ]);
+        if ($saveToFile) {
+            (new MessageRepository())->store([
+                'book_id' => $book->id,
+                'book' => $savedBook,
+                'action' => 'Импорт'
+            ]);
+        }
     }
 }

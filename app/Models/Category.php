@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -23,4 +25,13 @@ class Category extends AdminModel
     protected $fillable = [
         'title',
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function books(): HasMany
+    {
+        return $this
+            ->hasMany(Book::class, 'category_id', 'id');
+    }
 }
