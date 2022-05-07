@@ -5,6 +5,7 @@ namespace App\Repositories\Interfaces;
 
 use App\Models\Message;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Request;
 
 interface MessageRepositoryInterface extends BaseRepositoryInterface
 {
@@ -14,10 +15,10 @@ interface MessageRepositoryInterface extends BaseRepositoryInterface
     public function getMessages(): Collection;
 
     /**
-     * @param Message $message
-     * @return bool
+     * @param Request $request
+     * @return int
      */
-    public function destroy(Message $message): bool;
+    public function destroy(Request $request): int;
 
     /**
      * @return bool

@@ -117,7 +117,7 @@ Route::namespace('api')->group(function () {
     // Message
     Route::prefix('/message')->group(function () {
         Route::get('/get',      [MessageGetController::class, '__invoke'])->name('message.get');
-        Route::post('/{id}/clear', [MessageClearController::class, '__invoke'])->name('message.clear');
+        Route::post('/clear',   [MessageClearController::class, '__invoke'])->name('message.clear');
         Route::post('/read',    [MessageReadController::class, '__invoke'])->name('message.read');
     });
 

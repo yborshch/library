@@ -5,8 +5,8 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Message;
 use App\Repositories\Interfaces\MessageRepositoryInterface;
-use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Request;
 
 class MessageRepository extends BaseRepository implements MessageRepositoryInterface
 {
@@ -32,13 +32,12 @@ class MessageRepository extends BaseRepository implements MessageRepositoryInter
     }
 
     /**
-     * @param Message $message
-     * @return bool
-     * @throws Exception
+     * @param Request $request
+     * @return int
      */
-    public function destroy(Message $message): bool
+    public function destroy(Request $request): int
     {
-        return $message->delete();
+        return $this->model::where('book_id', $request->get('id'))->delete();
     }
 
     public function readAllMessages(): bool
