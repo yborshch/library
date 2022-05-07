@@ -33,9 +33,13 @@ class CategoryListController extends Controller
      */
     public function __invoke(ListRequest $request): JsonResponse
     {
-        $response = new IsHasBooksResource(
-            $this->repository->list($request)
-        );
+        if (!$request->get('all')) {
+            $response = new IsHasBooksResource(
+                $this->repository->list($request)
+            );
+        } else {
+            $response = $this->repository->list($request);
+        }
 
         return response()->json(
             new ResponseDTO($response)
