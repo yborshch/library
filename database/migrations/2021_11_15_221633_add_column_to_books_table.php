@@ -14,7 +14,7 @@ class AddColumnToBooksTable extends Migration
     public function up()
     {
         Schema::table('books', function (Blueprint $table) {
-            $table->integer('source')->after('read');
+            $table->integer('source')->after('year');
         });
     }
 
