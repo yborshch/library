@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 /**
@@ -25,7 +26,16 @@ class WatchAuthor extends AdminModel
     protected $fillable = [
         'firstname',
         'lastname',
+        'source',
         'url',
         'active'
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function watchBook(): HasMany
+    {
+        return $this->hasMany(WatchBook::class, 'book_id', 'id');
+    }
 }

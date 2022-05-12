@@ -78,6 +78,7 @@ class Litres extends AbstractParser implements ParserInterface
                     $this->authorRepository->store([
                         'firstname' => $fullName[0],
                         'lastname' => $fullName[1],
+                        'source' => 'litres',
                         'url' => $url,
                         'active' => true,
                     ]);

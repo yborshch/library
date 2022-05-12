@@ -77,6 +77,7 @@ class Loveread extends AbstractParser implements ParserInterface
                 $this->authorRepository->store([
                     'firstname' => $fullName[0],
                     'lastname' => $fullName[1],
+                    'source' => 'loveread',
                     'url' => $url,
                     'active' => true,
                 ]);
