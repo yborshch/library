@@ -185,13 +185,6 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
         return $authors;
     }
 
-    public function getImportedBooks(): Collection
-    {
-        return $this->model::where('source', ValueBook::BOOK_IMPORT)
-            ->with('authors', 'image')
-            ->get();
-    }
-
     /**
      * @param string $sourceLink
      * @return bool
