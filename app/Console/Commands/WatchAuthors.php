@@ -3,8 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\Watch\MessageType\Preparation;
-use App\Jobs\Watch\WatchAuthorsFromLitresJob;
-use App\Jobs\Watch\WatchAuthorsFromLovereadJob;
+use App\Jobs\Watch\WatchAuthorsJob;
 use Illuminate\Console\Command;
 
 class WatchAuthors extends Command
@@ -14,7 +13,7 @@ class WatchAuthors extends Command
      *
      * @var string
      */
-    protected $signature = 'watch:run {site}';
+    protected $signature = 'watch:run';
 
     /**
      * The console command description.
@@ -40,13 +39,7 @@ class WatchAuthors extends Command
      */
     public function handle(): int
     {
-        $job = match ($this->argument('site')) {
-            'loveread' => new WatchAuthorsFromLovereadJob(new Preparation()),
-            'litres' => new WatchAuthorsFromLitresJob(new Preparation()),
-            default => null,
-        };
-
-        dispatch($job->onQueue('watch'));
+        dispatch((new WatchAuthorsJob(new Preparation()))->onQueue('watch'));
 
         return Command::SUCCESS;
     }

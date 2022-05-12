@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
 class WatchBook extends AdminModel
@@ -22,4 +23,12 @@ class WatchBook extends AdminModel
         'title',
         'url',
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function watchAuthor(): BelongsTo
+    {
+        return $this->belongsTo(WatchAuthor::class);
+    }
 }

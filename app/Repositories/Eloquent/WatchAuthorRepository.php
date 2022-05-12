@@ -37,4 +37,22 @@ class WatchAuthorRepository extends BaseRepository implements WatchAuthorReposit
     {
         return $this->model::where($params['column'], $params['value'])->count() > 0;
     }
+
+    public function getImportedBooks(): Collection
+    {
+        $sources = $this->model::select('source')->groupBy('source')->get()->toArray();
+        $result = [];
+        $result2 = [];
+        foreach ($sources as $item) {
+            $result[$item['source']] = $this->model::where('source', $item['source'])->get();
+        }
+        foreach ($result as $value) {
+            foreach ($value as $author) {
+                dump($author->with('watchBook')->get());
+//                $result2[] = $author->with('watchBook')->get();
+            }
+        }
+dd($result);
+
+    }
 }
