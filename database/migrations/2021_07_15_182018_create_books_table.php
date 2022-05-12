@@ -20,7 +20,7 @@ class CreateBooksTable extends Migration
             $table->integer('current_page')->nullable();
             $table->text('description')->nullable();
             $table->integer('pages')->nullable();
-            $table->boolean('readed')->default(false);
+            $table->boolean('read')->default(false);
             $table->string('title');
             $table->string('year')->nullable();
             $table->timestamps();
