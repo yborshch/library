@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\Author;
 use App\DTO\ResponseDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ListRequest;
+use App\Http\Resources\IsHasBooksResource;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 
@@ -32,8 +33,17 @@ class AuthorListController extends Controller
      */
     public function __invoke(ListRequest $request): JsonResponse
     {
+
+        if (!$request->get('all')) {
+            $response = new IsHasBooksResource(
+                $this->repository->list($request)
+            );
+        } else {
+            $response = $this->repository->list($request);
+        }
+
         return response()->json(
-            new ResponseDTO($this->repository->list($request))
+            new ResponseDTO($response)
         );
     }
 }
