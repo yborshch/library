@@ -12,6 +12,9 @@ use App\Repositories\Eloquent\QueueRepository;
 use App\Repositories\Eloquent\SeriesRepository;
 use App\Repositories\Eloquent\TagRepository;
 use App\Repositories\Eloquent\UserRepository;
+use App\Repositories\Eloquent\WatchAuthorRepository;
+use App\Repositories\Eloquent\WatchBookRepository;
+use App\Repositories\Eloquent\WatchSeriesRepository;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use App\Repositories\Interfaces\BookRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
@@ -22,6 +25,9 @@ use App\Repositories\Interfaces\QueueRepositoryInterface;
 use App\Repositories\Interfaces\SeriesRepositoryInterface;
 use App\Repositories\Interfaces\TagRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use App\Repositories\Interfaces\WatchAuthorRepositoryInterface;
+use App\Repositories\Interfaces\WatchBookRepositoryInterface;
+use App\Repositories\Interfaces\WatchSeriesRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -43,6 +49,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ContextRepositoryInterface::class, ContextRepository::class);
         $this->app->bind(MessageRepositoryInterface::class, MessageRepository::class);
         $this->app->bind(QueueRepositoryInterface::class, QueueRepository::class);
+        $this->app->bind(WatchAuthorRepositoryInterface::class, WatchAuthorRepository::class);
+        $this->app->bind(WatchBookRepositoryInterface::class, WatchBookRepository::class);
+        $this->app->bind(WatchSeriesRepositoryInterface::class, WatchSeriesRepository::class);
     }
 
     /**
