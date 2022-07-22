@@ -5,6 +5,7 @@ namespace App\Repositories\Eloquent;
 use App\Models\WatchAuthor;
 use App\Repositories\Interfaces\WatchAuthorRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class WatchAuthorRepository extends BaseRepository implements WatchAuthorRepositoryInterface
 {
@@ -38,21 +39,24 @@ class WatchAuthorRepository extends BaseRepository implements WatchAuthorReposit
         return $this->model::where($params['column'], $params['value'])->count() > 0;
     }
 
-    public function getImportedBooks(): Collection
+    /**
+     * @param string $site
+     * @return array
+     */
+    public function getImportedBooks(string $site): array
     {
-        $sources = $this->model::select('source')->groupBy('source')->get()->toArray();
         $result = [];
-        $result2 = [];
-        foreach ($sources as $item) {
-            $result[$item['source']] = $this->model::where('source', $item['source'])->get();
-        }
-        foreach ($result as $value) {
-            foreach ($value as $author) {
-                dump($author->with('watchBook')->get());
-//                $result2[] = $author->with('watchBook')->get();
-            }
-        }
-dd($result);
-
+        $result['authors'] = $this->model::where('source', $site)
+            ->get()
+            ->toArray();
+        $ids = array_column($result['authors'], 'id');
+        $result['books'] = DB::table('watch_books')
+            ->whereIn('author_id', $ids)
+            ->select('watch_books.*', 'watch_authors.lastname', 'watch_authors.firstname')
+            ->rightJoin('watch_authors', 'watch_books.author_id', '=', 'watch_authors.id')
+            ->orderBy('watch_books.created_at', 'desc')
+            ->get()
+            ->toArray();
+        return $result;
     }
 }

@@ -121,4 +121,13 @@ class Book extends AdminModel
         return $this
             ->hasMany(File::class, 'book_id', 'id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function context(): HasMany
+    {
+        return $this
+            ->hasMany(Context::class, 'book_id', 'id');
+    }
 }

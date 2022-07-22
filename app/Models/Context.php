@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property mixed $bookmark
+ */
 class Context extends Model
 {
     use HasFactory;
@@ -20,5 +23,10 @@ class Context extends Model
         'book_id',
         'page',
         'text',
+        'bookmark'
+    ];
+
+    protected $casts = [
+        'bookmark' => 'array',
     ];
 }

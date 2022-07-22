@@ -67,7 +67,7 @@ class WatchAuthorsJob implements ShouldQueue
             $message = new Watch();
             $message->type = 'watch';
             $message->data = $this->repository->getWatchAuthors($page, self::AMOUNT_AUTHORS_IN_MESSAGE);
-            $job = new WatchAuthorsFromLitresJob($message);
+            $job = new self($message);
             dispatch($job->onQueue('watch'));
         }
     }
@@ -78,7 +78,8 @@ class WatchAuthorsJob implements ShouldQueue
     protected function watch()
     {
         foreach ($this->message->data as $author) {
-            $parser = match ($author['url']) {
+            $urlInfo = parse_url($author['url']);
+            $parser = match ($urlInfo['host']) {
                 'loveread.ec' => new Loveread(),
                 'litres.ua' => new Litres(),
                 default =>  throw new ApiArgumentException(

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api\Import;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\IsExistWatchBookRelationToBookResource;
 use App\Repositories\Interfaces\WatchAuthorRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class ImportGetController extends Controller
 {
@@ -22,12 +24,18 @@ class ImportGetController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $site
      * @return JsonResponse
      */
-    public function __invoke(): JsonResponse
+    public function __invoke(Request $request, $site): JsonResponse
     {
+        $response = new IsExistWatchBookRelationToBookResource(
+            $this->bookRepository->getImportedBooks($site)
+        );
+
         return response()->json(
-            $this->bookRepository->getImportedBooks(),
+            $response,
             201
         );
     }

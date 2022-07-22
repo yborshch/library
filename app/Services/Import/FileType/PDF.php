@@ -52,7 +52,7 @@ class PDF implements FileTypeInterface
         $book->pages = $mpdf->page;
 
         try {
-            $path = public_path(sprintf("/storage/%s.pdf", $this->filename));
+            $path = public_path(sprintf("/books/%s.pdf", $this->filename));
             $mpdf->Output($path,'F');
             $book->file = new File();
             $book->file->filename = $this->filename;

@@ -3,7 +3,7 @@
 /public/storage
 /public/images/books
 /storage/*.key
-/storage/app/public
+/public/books
 /vendor
 .env
 .env.backup

@@ -78,9 +78,9 @@ class Loveread implements ParserInterface
             if (mb_strripos($item->textContent, 'Год', 0, "utf-8") !== false) {
                 $builder->setYear($item->nextSibling->textContent);
             }
-            if (mb_strripos($item->textContent, 'Страниц', 0, "utf-8") !== false) {
-                $builder->setPages($item->nextSibling->textContent);
-            }
+//            if (mb_strripos($item->textContent, 'Страниц', 0, "utf-8") !== false) {
+//                $builder->setPages($item->nextSibling->textContent);
+//            }
             if (mb_strripos($item->textContent, 'Серия', 0, "utf-8") !== false) {
                 foreach ($links as $link) {
                     if (str_contains($link->getAttribute('href'), 'series-books.php?id=')) {

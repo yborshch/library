@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
 /**
- * @method static chunk(int $int, \Closure $param)
- * @method static where(string $string, bool $true)
- * @method static count()
  * @property mixed $id
  * @property mixed $firstname
  * @property mixed $lastname
@@ -34,8 +31,8 @@ class WatchAuthor extends AdminModel
     /**
      * @return HasMany
      */
-    public function watchBook(): HasMany
+    public function books(): HasMany
     {
-        return $this->hasMany(WatchBook::class, 'book_id', 'id');
+        return $this->hasMany(WatchBook::class, 'author_id');
     }
 }

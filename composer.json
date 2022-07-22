@@ -22,7 +22,8 @@
         "mpdf/mpdf": "^8.0",
         "symfony/css-selector": "^6.0",
         "symfony/dom-crawler": "^6.0",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3"
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3",
+      "ext-dom": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

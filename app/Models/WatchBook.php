@@ -27,8 +27,8 @@ class WatchBook extends AdminModel
     /**
      * @return BelongsTo
      */
-    public function watchAuthor(): BelongsTo
+    public function author(): BelongsTo
     {
-        return $this->belongsTo(WatchAuthor::class);
+        return $this->belongsTo(WatchAuthor::class, 'id', 'book_id');
     }
 }

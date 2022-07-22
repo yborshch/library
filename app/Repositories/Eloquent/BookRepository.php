@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 namespace App\Repositories\Eloquent;
 
 use App\DTO\ListDTO;
+use App\Events\BookCurrentPageUpdateEvent;
 use App\Exceptions\ApiArgumentException;
 use App\Models\Author;
 use App\Models\Book;
@@ -129,26 +130,37 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
         return (new FileRepository())->store($forStore);
     }
 
+    /**
+     * @param array $values
+     * @return array
+     */
     protected function preparationAuthors(array $values): array
     {
-        $authors = [];
+        dd($values);
+        if (count($values) > 0) {
+            $authors = [];
 
-        foreach ($values as $value) {
-            if ($value['new']) {
-                $authors[] = Author::firstOrCreate(
-                    ['firstname' => $value['firstname']],
-                    ['lastname' => $value['lastname']],
-                )->toArray();
-            } else {
-                $authors[] = Author::where('id', '=', $value['id'])
-                    ->first()
-                    ->toArray();
+            foreach ($values as $value) {
+                if ($value['new']) {
+                    $authors[] = Author::firstOrCreate(
+                        ['firstname' => $value['firstname']],
+                        ['lastname' => $value['lastname']],
+                    )->toArray();
+                } else {
+                    $authors[] = Author::where('id', '=', $value['id'])
+                        ->first()
+                        ->toArray();
+                }
             }
-        }
 
-        return $authors;
+            return $authors;
+        }
     }
 
+    /**
+     * @param array $values
+     * @return stdClass
+     */
     protected function preparationAuthorsForImport(array $values): stdClass
     {
         $authors = new stdClass();
@@ -254,15 +266,19 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
         $this->removeBookFromQueue($book);
         $this->removeBookAuthor($book);
         $this->removeBookTag($book);
+        $this->removeBookContext($book);
         $book->delete();
 
         return $book;
     }
 
+    /**
+     * @param File $file
+     */
     protected function removeFile(File $file)
     {
         if (isset($file->image) && isset($file->filename) && isset($file->extension)) {
-            $pathToFolder = $file->image ? '/images/books/' : '/storage/';
+            $pathToFolder = $file->image ? '/images/books/' : '/books/';
             if (file_exists(public_path($pathToFolder) . $file->filename . '.' . $file->extension)) {
                 unlink(public_path($pathToFolder) . $file->filename . '.' . $file->extension);
             }
@@ -310,6 +326,14 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
     }
 
     /**
+     * @param Book $book
+     */
+    protected function removeBookContext(Book $book): void
+    {
+        $book->context()->delete();
+    }
+
+    /**
      * @param Request $request
      * @return ListDTO
      */
@@ -337,5 +361,35 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
             '',
             $value->items(),
         );
+    }
+
+    /**
+     * @param int $id
+     * @return mixed
+     */
+    public function getRaw(int $id): mixed
+    {
+        return $this->model::where(['id' => $id, 'type' => 'raw'])
+            ->with('authors', 'context', 'image')
+            ->get();
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function setCurrentPage(Request $request)
+    {
+        $book = $this->model::where('id', $request->get('id'))->first();
+
+        event(new BookCurrentPageUpdateEvent([
+            'id' => $book->id,
+            'current' => $book->pages,
+            'new' => $request->get('current_page')
+        ]));
+
+        return $book->update([
+            'current_page' => $request->get('current_page')
+        ]);
     }
 }
