@@ -7,6 +7,7 @@ use App\Services\Http\HttpClient;
 use App\Services\Http\HttpClientInterface;
 use App\Services\Images\ImageService;
 use App\Services\Import\Parser\ParserInterface;
+use App\Traits\ConvertHttp;
 use App\ValueObject\Book;
 use DOMDocument;
 use DOMXPath;
@@ -14,6 +15,8 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class Loveread implements ParserInterface
 {
+    use ConvertHttp;
+
     /**
      * @var int
      */
@@ -40,7 +43,7 @@ class Loveread implements ParserInterface
      */
     public function setUrlToBookInformation(string $url): void
     {
-        $this->urlToBookInformation = $url;
+        $this->urlToBookInformation = $this->httpsToHttp($url);
     }
 
     /**
@@ -50,7 +53,7 @@ class Loveread implements ParserInterface
     public function getBookInformation(): Book
     {
         // Set book id on Loveread
-        $this->bookIdOnLoveared = str_replace(env('LOVEREAD_HOST') . 'view_global.php?id=', '', $this->urlToBookInformation);
+        $this->bookIdOnLoveared = (int) str_replace(env('LOVEREAD_HOST') . 'view_global.php?id=', '', $this->urlToBookInformation);
 
         // Guzzle
         $response = $this->httpClient->get($this->urlToBookInformation);
@@ -75,12 +78,11 @@ class Loveread implements ParserInterface
             if (mb_strripos($item->textContent, 'Название', 0, "utf-8") !== false) {
                  $builder->setTitle($item->nextSibling->textContent);
             }
+
             if (mb_strripos($item->textContent, 'Год', 0, "utf-8") !== false) {
                 $builder->setYear($item->nextSibling->textContent);
             }
-//            if (mb_strripos($item->textContent, 'Страниц', 0, "utf-8") !== false) {
-//                $builder->setPages($item->nextSibling->textContent);
-//            }
+
             if (mb_strripos($item->textContent, 'Серия', 0, "utf-8") !== false) {
                 foreach ($links as $link) {
                     if (str_contains($link->getAttribute('href'), 'series-books.php?id=')) {
@@ -88,6 +90,7 @@ class Loveread implements ParserInterface
                     }
                 }
             }
+
             if (mb_strripos($item->textContent, 'Автор', 0, "utf-8") !== false) {
                 foreach ($links as $link) {
                     if (str_contains($link->getAttribute('href'), 'biography-author.php?author=')) {

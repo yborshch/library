@@ -4,6 +4,7 @@ declare( strict_types = 1 );
 namespace App\Repositories\Eloquent;
 
 use App\DTO\ListDTO;
+use App\Exceptions\ApiArgumentException;
 use App\Models\Author;
 use App\Repositories\Interfaces\AuthorRepositoryInterface;
 use Illuminate\Pagination\Paginator;
@@ -70,5 +71,25 @@ class AuthorRepository extends BaseRepository implements AuthorRepositoryInterfa
             $result[] = $this->model::firstOrCreate($value);
         }
         return $result;
+    }
+
+    /**
+     * @param Request $request
+     * @return ListDTO
+     * @throws ApiArgumentException
+     */
+    public function list(Request $request): ListDTO
+    {
+        if ($request->get('all') && $request->get('all') === 'true') {
+            return new ListDTO(
+                0,
+                0,
+                0,
+                0,
+                '',
+                $this->model::orderBy('lastname', 'asc')->get()->toArray(),
+            );
+        }
+        return $this->withPagination($request, []);
     }
 }

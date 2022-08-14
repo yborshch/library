@@ -20,7 +20,7 @@ trait ValidationJsonResponseTrait
         $result = [];
         foreach ($validator->errors()->getMessages() as $field) {
             foreach ($field as $error) {
-                array_push($result, $error);
+                $result[] = $error;
             }
         }
 
