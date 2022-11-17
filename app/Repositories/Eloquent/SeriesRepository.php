@@ -18,10 +18,10 @@ class SeriesRepository extends BaseRepository implements SeriesRepositoryInterfa
     }
 
     /**
-     * @param string $series
+     * @param int $series
      * @return Model
      */
-    public function getOrCreate(string $series): Model
+    public function getOrCreate(int $series): Model
     {
         return $this->model::firstOrCreate(['title' => $series]);
     }

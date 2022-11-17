@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\Category\CategoryUpdateController;
 use App\Http\Controllers\Api\Context\ClearBookmarkController;
 use App\Http\Controllers\Api\Context\RemoveBookmarkController;
 use App\Http\Controllers\Api\Context\SetBookmarkController;
+use App\Http\Controllers\Api\Image\ImageStoreController;
 use App\Http\Controllers\Api\Import\ImportBookController;
 use App\Http\Controllers\Api\Import\ImportGetController;
 use App\Http\Controllers\Api\Message\AllMessagesClearController;
@@ -122,6 +123,9 @@ Route::namespace('api')->group(function () {
     // Import
     Route::get('/import/{site}/get',   [ImportGetController::class, '__invoke'])->name('import.get');
     Route::post('/import',      [ImportBookController::class, '__invoke'])->name('import.book');
+
+    // Image
+    Route::post('/image/store',      [ImageStoreController::class, '__invoke'])->name('image.store');
 
     // Watch
     Route::prefix('/watch')->group(function () {

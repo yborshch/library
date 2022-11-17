@@ -6,6 +6,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "ext-dom": "*",
+        "ext-imagick": "*",
         "ext-json": "*",
         "ext-libxml": "*",
         "ext-pdo": "*",
@@ -16,14 +18,13 @@
         "intervention/image": "^2.7",
         "laravel-notification-channels/telegram": "^1.0",
         "laravel/framework": "^8.40",
-        "laravel/passport": "^10.1",
+        "laravel/passport": "*",
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "^1.0",
         "mpdf/mpdf": "^8.0",
         "symfony/css-selector": "^6.0",
         "symfony/dom-crawler": "^6.0",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3",
-      "ext-dom": "*"
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

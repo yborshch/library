@@ -44,7 +44,7 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
             }
 
             // Series
-            if (isset($value['series'])) {
+            if (isset($value['series']) && 0 !== $value['series']) {
                 $seriesModel = (new SeriesRepository())->getOrCreate($value['series']);
                 $book['series_id'] = $seriesModel->id;
             }
@@ -136,7 +136,6 @@ class BookRepository extends BaseRepository implements BookRepositoryInterface
      */
     protected function preparationAuthors(array $values): array
     {
-        dd($values);
         if (count($values) > 0) {
             $authors = [];
 
